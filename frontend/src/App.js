@@ -1,52 +1,99 @@
-import { useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+// Step components
+import TitleCard from "@/steps/TitleCard";
+import RawInput from "@/steps/RawInput";
+import FrameSelection from "@/steps/FrameSelection";
+import SpatialProblem from "@/steps/SpatialProblem";
+import QRZoneDetection from "@/steps/QRZoneDetection";
+import VLMAnalysis from "@/steps/VLMAnalysis";
+import EvidenceNotTrust from "@/steps/EvidenceNotTrust";
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+const TOTAL_STEPS = 7;
+
+function App() {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const goToNextStep = useCallback(() => {
+    setCurrentStep((prev) => Math.min(prev + 1, TOTAL_STEPS - 1));
+  }, []);
+
+  const goToPrevStep = useCallback(() => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        goToNextStep();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goToPrevStep();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [goToNextStep, goToPrevStep]);
+
+  // Click to advance
+  const handleClick = (e) => {
+    // Don't advance if clicking on interactive elements
+    if (e.target.tagName === "BUTTON" || e.target.tagName === "A") return;
+    goToNextStep();
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 0:
+        return <TitleCard key="title" />;
+      case 1:
+        return <RawInput key="raw-input" />;
+      case 2:
+        return <FrameSelection key="frame-selection" />;
+      case 3:
+        return <SpatialProblem key="spatial-problem" />;
+      case 4:
+        return <QRZoneDetection key="qr-zone" />;
+      case 5:
+        return <VLMAnalysis key="vlm-analysis" />;
+      case 6:
+        return <EvidenceNotTrust key="evidence" />;
+      default:
+        return <TitleCard key="title" />;
     }
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+    <div
+      className="bg-blueprint w-screen h-screen overflow-hidden relative cursor-pointer select-none"
+      onClick={handleClick}
+      data-testid="presentation-container"
+    >
+      {/* Main Content */}
+      <AnimatePresence mode="wait">
+        {renderStep()}
+      </AnimatePresence>
 
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      {/* Step Counter - Bottom Left */}
+      <div
+        className="fixed bottom-6 left-8 font-mono text-sm text-blueprint-ink/60 z-50"
+        data-testid="step-counter"
+      >
+        {currentStep} / {TOTAL_STEPS - 1}
+      </div>
+
+      {/* Watermark - Bottom Right */}
+      <div
+        className="fixed bottom-6 right-8 font-mono text-sm text-blueprint-ink/40 z-50"
+        data-testid="watermark"
+      >
+        StructIQ
+      </div>
     </div>
   );
 }
