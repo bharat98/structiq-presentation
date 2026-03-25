@@ -1,0 +1,124 @@
+{
+  "project_name": "StructIQ",
+  "design_philosophy": {
+    "identity": "E1: The Anti-AI Designer",
+    "theme": "Blueprint / Retro-Technical",
+    "core_principles": [
+      "No generic gradients",
+      "Ink-on-paper aesthetic",
+      "Motion conveys meaning, not just decoration",
+      "Technical precision over decorative fluff"
+    ]
+  },
+  "typography": {
+    "primary": {
+      "name": "Inter",
+      "usage": "Headings, Titles, UI Labels",
+      "weights": [400, 600, 800],
+      "import_url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    },
+    "secondary": {
+      "name": "JetBrains Mono",
+      "usage": "Data, Code, Technical Annotations, Step Counter",
+      "weights": [400, 500, 700]
+    }
+  },
+  "colors": {
+    "palette": {
+      "background": "#F5F0E1",
+      "grid_lines": "#D4C9A8",
+      "ink": "#2C2C2C",
+      "accent_red": "#C0392B",
+      "accent_green": "#27AE60",
+      "accent_blue": "#2980B9",
+      "accent_amber": "#F39C12",
+      "white_paper": "#FFFFFF"
+    },
+    "semantic": {
+      "bg_primary": "var(--background)",
+      "text_primary": "var(--ink)",
+      "border_primary": "var(--ink)",
+      "success": "var(--accent_green)",
+      "error": "var(--accent_red)",
+      "warning": "var(--accent_amber)",
+      "info": "var(--accent_blue)"
+    }
+  },
+  "layout": {
+    "structure": "Single Page App (SPA) with 7 distinct 'Slide' states",
+    "dimensions": "100vw x 100vh (No scrolling)",
+    "grid_system": "CSS Grid Background (24px spacing)",
+    "z_index": {
+      "background": 0,
+      "content": 10,
+      "overlays": 20,
+      "watermark": 50
+    }
+  },
+  "visual_enhancements": {
+    "borders": "1px solid #2C2C2C (Thin Ink)",
+    "radius": "rounded-sm (2px) or rounded-md (4px) - Technical feel",
+    "shadows": "4px 4px 0px 0px rgba(212, 201, 168, 0.5) (Hard, retro shadow)",
+    "textures": {
+      "grid_pattern": "linear-gradient(to right, #D4C9A8 1px, transparent 1px), linear-gradient(to bottom, #D4C9A8 1px, transparent 1px)"
+    }
+  },
+  "components": {
+    "SlideContainer": {
+      "description": "Full-screen absolute container for each step",
+      "animation": "AnimatePresence with smooth opacity/x-axis transitions"
+    },
+    "StepCounter": {
+      "position": "bottom-left",
+      "font": "JetBrains Mono",
+      "style": "Fixed position, technical readout style (e.g., 'STEP 01 / 06')"
+    },
+    "Watermark": {
+      "text": "StructIQ",
+      "position": "bottom-right",
+      "opacity": "0.5",
+      "font": "JetBrains Mono"
+    },
+    "FrameGrid": {
+      "description": "Grid of 96 small rectangles representing video frames",
+      "interaction": "Step 2 triggers filtering animation (opacity reduction for rejected frames)"
+    },
+    "DashboardMockup": {
+      "description": "Final step visualization",
+      "style": "Bento grid layout using Shadcn cards with blueprint styling (no default shadows)"
+    }
+  },
+  "animations": {
+    "library": "framer-motion",
+    "defaults": {
+      "duration": 0.5,
+      "ease": "easeInOut"
+    },
+    "transitions": {
+      "slide_change": "fade in/out or slide x",
+      "element_reveal": "staggerChildren with opacity/y-offset"
+    }
+  },
+  "assets": {
+    "icons": "Lucide React (Video, Filter, Brain, QrCode, Shield)",
+    "images": "NONE - Use CSS shapes and Unicode characters"
+  },
+  "instructions_to_main_agent": [
+    "1. INSTALLATION: Install 'framer-motion' immediately (`yarn add framer-motion`).",
+    "2. TAILWIND CONFIG: Update `tailwind.config.js` to include the custom color palette (extend colors).",
+    "3. GLOBAL CSS: Add the Google Fonts import to `src/index.css`.",
+    "4. GLOBAL CSS: Create a utility class `.bg-blueprint` that applies the grid background pattern.",
+    "5. STATE MANAGEMENT: Use a simple React `useState` for the `currentStep` (0-6).",
+    "6. KEYBOARD EVENTS: Add a global event listener for 'ArrowRight' (next) and 'ArrowLeft' (prev).",
+    "7. CLICK EVENTS: Add a global click listener to advance to the next step.",
+    "8. COMPONENT STRUCTURE: Create a `Presentation` component that renders specific sub-components based on `currentStep`.",
+    "9. NO IMAGES: Do not use <img> tags. Build visualizations using <div> arrays (for frames) and Lucide icons.",
+    "10. TESTING: Add `data-testid` to the main container and navigation elements."
+  ],
+  "universal_guidelines": [
+    "Do not use gradients for backgrounds, only for the grid lines.",
+    "Ensure high contrast between text (#2C2C2C) and background (#F5F0E1).",
+    "Animations must be smooth but snappy (not sluggish).",
+    "Code must be modular - separate steps into their own components if they get complex."
+  ]
+}
